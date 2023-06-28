@@ -1,0 +1,32 @@
+# .gitignore
+
+# Virtual environment
+venv/
+env/
+
+# SQLite database files
+*.db
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+
+# Flask file (uncomment this if your file contains sensitive info)
+# instance/config.py
+
+# .env files
+.env
+
+# Other
+.DS_Store
+*.pid
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
