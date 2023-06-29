@@ -5,8 +5,10 @@ import logging
 
 def create_test_data():
     logging.info("Creating test data")
-    user1 = Owner(username='bob', email='bob@bob.com', password_hash='password', bikes=[])
-    user2 = Owner(username='joe', email='joe@joe.com', password_hash='password', bikes=[])
+    user1 = Owner(username='bob', email='bob@bob.com', bikes=[])
+    user1.set_password('password')
+    user2 = Owner(username='joe', email='joe@joe.com', bikes=[])
+    user2.set_password('password')
     db.session.add(user1)
     db.session.add(user2)
     try:

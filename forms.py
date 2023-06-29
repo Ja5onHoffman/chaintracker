@@ -16,11 +16,6 @@ class RegistrationForm(FlaskForm):
     password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Register')
 
-    # The following methods are used by Flask-WTF to validate the data in the form
-    # The methods are named validate_<field_name> and validate_<field_name>
-    # The methods should raise a ValidationError if the data is invalid
-    # The error message is passed to the ValidationError constructor
-    # The error message is displayed in the form
     def validate_username(self, username):
         user = Owner.query.filter_by(username=username.data).first()
         if user is not None:
