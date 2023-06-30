@@ -32,7 +32,8 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('userhome', username=current_user.username))
+        logout_user() # logout for now to test login
+        # return redirect(url_for('userhome', username=current_user.username))
     form = LoginForm()
     if form.validate_on_submit():
         user = Owner.query.filter_by(username=form.username.data).first()
@@ -52,8 +53,22 @@ def userhome(username):
 
 @app.route('/bike/<int:bike_id>')
 @login_required
-def bike(user):
-    return render_template('bike.html', bike=bike.id)
+def bike(bike_id):
+    bike = Bike.query.get(bike_id)
+    return render_template('bike.html', bike=bike)
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('userhome', username=current_user.username))
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = Owner(username=form.username.data, email=form.email.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash("Congratulations, you are now a registered user!")
+        return redirect(url_for('userhome', username=user.username))
 
 @app.route('/read')
 def read():
