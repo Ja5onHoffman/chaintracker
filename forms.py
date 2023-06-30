@@ -26,20 +26,17 @@ class RegistrationForm(FlaskForm):
         user = Owner.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('Please use a different email address.')
+
+class PartForm(FlaskForm):
+    name = StringField('Part Name', validators=[DataRequired()])
+    part_type = StringField('Part Type', validators=[DataRequired()])
+    miles = StringField('Miles', validators=[DataRequired()])
+    hours = StringField('Hours', validators=[DataRequired()])
+    mile_limit = StringField('Mile Limit', validators=[DataRequired()])
+    hour_limit = StringField('Hour Limit', validators=[DataRequired()])
+    submit = SubmitField('Add Part')
         
-# class BikeForm(FlaskForm):
-#     name = StringField('Bike Name', validators=[DataRequired()])
-#     owner_id = current_user.id
-#     submit = SubmitField('Add Bike')
+class BikeForm(FlaskForm):
+    name = StringField('Bike Name', validators=[DataRequired()])
+    submit = SubmitField('Add Bike')
 
-
-
-
-# class Bike(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(64), index=True)
-#     owner_id = db.Column(db.Integer, db.ForeignKey('owner.id'))
-#     parts = db.relationship('Part', backref='bike', lazy='dynamic')
-
-#     def __repr__(self):
-#         return '<Bike {}>'.format(self.name)

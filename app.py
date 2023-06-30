@@ -57,6 +57,25 @@ def bike(bike_id):
     bike = Bike.query.get(bike_id)
     return render_template('bike.html', bike=bike)
 
+@app.route('/addpart', methods=['GET', 'POST'])
+@login_required
+def addpart(bike_id):
+    bike = Bike.query.get(bike_id)
+    form = PartForm()
+    if form.validate_on_submit():
+        part = Part(name=form.name.data, 
+                    part_type=form.part_type.data, 
+                    bike_id=bike.id, 
+                    miles=form.miles.data, #These will need to pull current miles from strava
+                    hours=form.hours.data, 
+                    mile_limit=form.mile_limit.data, 
+                    hour_limit=form.hour_limit.data)
+        db.session.add(part)
+        db.session.commit()
+        flash("Congratulations, you added a part!")
+        return redirect(url_for('bike', bike_id=bike_id))
+    return render_template('addpart.html', title='Add Part', form=form)
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
@@ -69,6 +88,7 @@ def register():
         db.session.commit()
         flash("Congratulations, you are now a registered user!")
         return redirect(url_for('userhome', username=user.username))
+    return render_template('register.html', title='Register', form=form)
 
 @app.route('/read')
 def read():
