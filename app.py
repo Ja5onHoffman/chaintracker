@@ -47,7 +47,13 @@ def login():
 @login_required
 def userhome(username):
     user = Owner.query.filter_by(username=username).first_or_404()
-    return render_template('userhome.html', user=user)
+    bikes = user.bikes.all()
+    return render_template('userhome.html', user=user, bikes=bikes)
+
+@app.route('/bike/<int:bike_id>')
+@login_required
+def bike(user):
+    return render_template('bike.html', bike=bike.id)
 
 @app.route('/read')
 def read():

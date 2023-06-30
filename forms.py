@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
-from models import Owner
+from models import Owner, Bike, Part
+from flask_login import current_user
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -26,3 +27,19 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError('Please use a different email address.')
         
+# class BikeForm(FlaskForm):
+#     name = StringField('Bike Name', validators=[DataRequired()])
+#     owner_id = current_user.id
+#     submit = SubmitField('Add Bike')
+
+
+
+
+# class Bike(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String(64), index=True)
+#     owner_id = db.Column(db.Integer, db.ForeignKey('owner.id'))
+#     parts = db.relationship('Part', backref='bike', lazy='dynamic')
+
+#     def __repr__(self):
+#         return '<Bike {}>'.format(self.name)

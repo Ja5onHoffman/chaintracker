@@ -2,6 +2,14 @@
 
 {% block content %}
   <h1>Hi {{ user.username }}</h1>
-  <p>WaxTracker is a web application that allows you to track your waxing appointments.</p>
-  <p>WaxTracker is currently in development. Please check back soon!</p>
+
+  <ul>
+    {% if user.bikes %}
+      {% for bike in user.bikes %}
+        <li><a href="{{ url_for('bike', bike_id=bike.id) }}">{{ bike.name }}</a></li>
+      {% endfor %}
+    {% else %}
+    <p><a href="">Add a bike!</a></p>
+    {% endif %}
+  </ul>
 {% endblock %}
