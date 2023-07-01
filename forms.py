@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, IntegerField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from models import Owner, Bike, Part
 from flask_login import current_user
@@ -29,7 +29,7 @@ class RegistrationForm(FlaskForm):
 
 class PartForm(FlaskForm):
     name = StringField('Part Name', validators=[DataRequired()])
-    part_type = StringField('Part Type', validators=[DataRequired()])
+    part_type = SelectField('Part Type', choices=[('type1', 'Type 1'), ('type2', 'Type 2')], validators=[DataRequired()])
     miles = StringField('Miles', validators=[DataRequired()])
     hours = StringField('Hours', validators=[DataRequired()])
     mile_limit = StringField('Mile Limit', validators=[DataRequired()])

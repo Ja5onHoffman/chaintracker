@@ -1,0 +1,47 @@
+<!-- Button trigger modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="addPartModal" tabindex="-1" aria-labelledby="addPartModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addPartModalLabel">Add Part</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Render the form -->
+        <form method="POST" action="{{ url_for('add_part', bike_id=bike_id) }}">
+          {{ form.hidden_tag() }}
+          <div class="mb-3">
+            {{ form.name.label }}
+            {{ form.name(class="form-control") }}
+          </div>
+          <div class="mb-3">
+            {{ form.part_type.label }}
+            {{ form.part_type(class="form-select") }}
+          </div>
+          <div class="mb-3">
+            {{ form.miles.label }}
+            {{ form.miles(class="form-control") }}
+          </div>
+          <div class="mb-3">
+            {{ form.hours.label }}
+            {{ form.hours(class="form-control") }}
+          </div>
+          <div class="mb-3">
+            {{ form.mile_limit.label }}
+            {{ form.mile_limit(class="form-control") }}
+          </div>
+          <div class="mb-3">
+            {{ form.hour_limit.label }}
+            {{ form.hour_limit(class="form-control") }}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            {{ form.submit(class="btn btn-primary") }}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

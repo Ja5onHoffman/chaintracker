@@ -5,7 +5,7 @@ from models import Owner, Bike, Part
 from database import db
 import os
 from dotenv import load_dotenv
-from forms import LoginForm, RegistrationForm
+from forms import LoginForm, RegistrationForm, PartForm, BikeForm
 
 load_dotenv()
 
@@ -54,12 +54,19 @@ def userhome(username):
 @app.route('/bike/<int:bike_id>')
 @login_required
 def bike(bike_id):
+    form = PartForm()
     bike = Bike.query.get(bike_id)
-    return render_template('bike.html', bike=bike)
+    return render_template('bike.html', bike=bike, bike_id=bike_id, form=form)
 
-@app.route('/addpart', methods=['GET', 'POST'])
+@app.route('/part/<int:part_id>')
 @login_required
-def addpart(bike_id):
+def part(part_id):
+    part = Part.query.get(part_id)
+    return render_template('part.html', part=part)
+
+@app.route('/add_part/<int:bike_id>', methods=['GET', 'POST'])
+@login_required
+def add_part(bike_id):
     bike = Bike.query.get(bike_id)
     form = PartForm()
     if form.validate_on_submit():
@@ -74,7 +81,7 @@ def addpart(bike_id):
         db.session.commit()
         flash("Congratulations, you added a part!")
         return redirect(url_for('bike', bike_id=bike_id))
-    return render_template('addpart.html', title='Add Part', form=form)
+    return render_template('add_part.html', title='Add Part', bike_id=bike_id, form=form)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
