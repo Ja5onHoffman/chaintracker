@@ -6,10 +6,12 @@ from database import db
 import os
 from dotenv import load_dotenv
 from forms import LoginForm, RegistrationForm, PartForm, BikeForm
+from strava import strava_routes
 
 load_dotenv()
 
 app = Flask(__name__)
+app.register_blueprint(strava_routes)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 
