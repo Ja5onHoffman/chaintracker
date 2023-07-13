@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Enum 
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import UserMixin
+from datetime import datetime, timedelta
 
 class Owner(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -10,6 +11,10 @@ class Owner(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     bikes = db.relationship('Bike', backref='owner', lazy='dynamic')
+    access_token = db.Column(db.String(128))
+    refresh_token = db.Column(db.String(128))
+    refresh_token_expiration = db.Column(db.Integer)
+    strava_authenticated = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return '<Owner {}>'.format(self.username)
@@ -19,6 +24,14 @@ class Owner(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def is_refresh_token_expired(self):
+        return self.refresh_token_expiration < datetime.now()
+
+    def set_refresh_token(self, token, expiration_time):
+        self.refresh_token = token
+        self.refresh_token_expiration = expiration_time
+
 
 class Bike(db.Model):
     id = db.Column(db.Integer, primary_key=True)

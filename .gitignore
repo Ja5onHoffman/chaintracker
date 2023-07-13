@@ -22,6 +22,8 @@ __pycache__/
 # .env files
 .env
 .vscode
+migrations/
+static/
 
 # Other
 .DS_Store

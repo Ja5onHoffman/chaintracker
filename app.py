@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import Owner, Bike, Part
@@ -6,14 +6,19 @@ from database import db
 import os
 from dotenv import load_dotenv
 from forms import LoginForm, RegistrationForm, PartForm, BikeForm
-from strava import strava_routes
+from flask_migrate import Migrate
+from stravalib.client import Client 
 
 load_dotenv()
 
 app = Flask(__name__)
-app.register_blueprint(strava_routes)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+
+migrate = Migrate(app, db)
+
+# stravalib Client
+client = Client()
 
 # LoginManager
 login_manager = LoginManager()
@@ -41,17 +46,45 @@ def login():
         user = Owner.query.filter_by(username=form.username.data).first()
         if user and user.check_password(form.password.data):
             login_user(user)
+            session['strava_authenticated'] = user.strava_authenticated
+            if not user.strava_authenticated:
+                session['auth_complete'] = False
             return redirect(url_for('userhome', username=user.username))
         else:
             flash('Invalid username or password')
     return render_template('login.html', title='Sign In', form=form)
 
+
+@app.route('/stravacallback')
+@login_required
+def strava_callback():
+    username = current_user.username
+
+    code = request.args.get('code')
+    token_response = client.exchange_code_for_token(client_id=os.getenv('CLIENT_ID'), client_secret=os.getenv('CLIENT_SECRET'), code=code)
+    user = Owner.query.filter_by(username=username).first_or_404()
+    user.access_token = token_response['access_token']
+    user.refresh_token = token_response['refresh_token']
+    user.refresh_token_expiration = token_response['expires_at']
+    user.strava_authenticated = True
+    db.session.commit()
+
+    return redirect(url_for('userhome', username=current_user.username))
+
+    
 @app.route('/user/<username>')
 @login_required
 def userhome(username):
+    strava_authenticated = session.get('strava_authenticated', False)
+
+    if not strava_authenticated:
+        url = client.authorization_url(client_id=os.getenv('CLIENT_ID'), 
+                                redirect_uri=f'http://127.0.0.1:5000/stravacallback',
+                                approval_prompt='auto')
+        
     user = Owner.query.filter_by(username=username).first_or_404()
     bikes = user.bikes.all()
-    return render_template('userhome.html', user=user, bikes=bikes)
+    return render_template('userhome.html', user=user, bikes=bikes, authorize_url=url)
 
 @app.route('/bike/<int:bike_id>')
 @login_required
@@ -107,6 +140,19 @@ def read():
         print("email:", owner.email)
         print("id:", owner.id)
     return "Read successful"
+
+
+
+# ## Strava stuff
+# @app.route('/strava')
+# @login_required
+# def strava_auth(user):
+#     username = current_user.username
+#     url = client.authorization_url(client_id=os.getenv('CLIENT_ID'), 
+#                                redirect_uri=f'http://127.0.0.1:5000/user/{username}', 
+#                                approval_prompt='auto')
+    
+
 
 if __name__ == "__main__":
     app.run(debug=True)

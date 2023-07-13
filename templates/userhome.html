@@ -3,6 +3,8 @@
 {% block content %}
   <h1>Hi {{ user.username }}</h1>
 
+  {% if user.strava_authenticated %}
+  <h2>Bikes</h2>
   <ul>
     {% if user.bikes %}
       {% for bike in user.bikes %}
@@ -12,4 +14,18 @@
     <p><a href="">Add a bike!</a></p>
     {% endif %}
   </ul>
+  {% else %}
+
+  <div class="jumbotron">
+    <h1>Connect your Strava account to use the app.</h1>
+    <p class="lead">
+    	Authenticate using your Strava account.
+	</p>
+	<p><a class="btn btn-lg" href="{{ authorize_url }}" role="button"><img src="/static/ConnectWithStrava.png" border="0" width="262" height="43" /></a></p>
+
+  </div>
+
+  {% endif %}
+
+
 {% endblock %}
