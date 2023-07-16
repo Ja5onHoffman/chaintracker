@@ -13,7 +13,7 @@ class Owner(UserMixin, db.Model):
     bikes = db.relationship('Bike', backref='owner', lazy='dynamic')
     access_token = db.Column(db.String(128))
     refresh_token = db.Column(db.String(128))
-    refresh_token_expiration = db.Column(db.Integer)
+    refresh_token_expiration = db.Column(db.DateTime)
     strava_authenticated = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
@@ -25,7 +25,7 @@ class Owner(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    def is_refresh_token_expired(self):
+    def is_refresh_token_expired(self) -> bool:
         return self.refresh_token_expiration < datetime.now()
 
     def set_refresh_token(self, token, expiration_time):
@@ -38,6 +38,7 @@ class Bike(db.Model):
     name = db.Column(db.String(64), index=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('owner.id'))
     parts = db.relationship('Part', backref='bike', lazy='dynamic')
+    miles = db.Column(db.Float)
 
     def __repr__(self):
         return '<Bike {}>'.format(self.name)
@@ -46,12 +47,11 @@ class Bike(db.Model):
 class Part(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
-    part_type = db.Column(Enum('type1', 'type2', name='part_type_enum'))
+    part_type = db.Column(Enum('Chain', 'Tire', name='part_type_enum'))
     bike_id = db.Column(db.Integer, db.ForeignKey('bike.id'))
-    miles = db.Column(db.Integer)
-    hours = db.Column(db.Integer)
-    mile_limit = db.Column(db.Integer)
-    hour_limit = db.Column(db.Integer)
+    miles_current = db.Column(db.Float)
+    miles_starting = db.Column(db.Float)
+    miles_limit = db.Column(db.Float)
 
     def __repr__(self):
         return '<Part {}>'.format(self.name)

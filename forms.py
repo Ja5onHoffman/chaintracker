@@ -40,3 +40,5 @@ class BikeForm(FlaskForm):
     name = StringField('Bike Name', validators=[DataRequired()])
     submit = SubmitField('Add Bike')
 
+class BikeFromStrava(FlaskForm):
+    name = SelectField('Bike', coerce=int)
