@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, IntegerField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, IntegerField, SelectMultipleField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from models import Owner, Bike, Part
 from flask_login import current_user
@@ -37,8 +37,9 @@ class PartForm(FlaskForm):
     submit = SubmitField('Add Part')
         
 class BikeForm(FlaskForm):
-    name = StringField('Bike Name', validators=[DataRequired()])
-    submit = SubmitField('Add Bike')
+    bikes = SelectMultipleField('Select Bikes', validators=[DataRequired()], coerce=int)
+    submit = SubmitField('Add Bikes')
 
-class BikeFromStrava(FlaskForm):
-    name = SelectField('Bike', coerce=int)
+
+# class BikeFromStrava(FlaskForm):
+#     name = SelectField('Bike', coerce=int)

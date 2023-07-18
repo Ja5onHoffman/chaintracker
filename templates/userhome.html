@@ -7,19 +7,20 @@
 
     {% if user.bikes %}
     <h2>Bikes</h2>
-
-    {% for bike in user.bikes %}
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">{{ bike.name }}</h5>
-        <p class="card-text">Last Waxed: {{ bike.miles }}</p>
-        <p class="card-text">Current: {{ bike.miles }}</p>
-        <p class="card-text">Total: {{ bike.miles }}</p>
-        <a href="{{ url_for('bike', bike_id=bike.id) }}" class="btn btn-primary">View</a>
+      {% for bike in user.bikes %}
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ bike.name }}</h5>
+          <p class="card-text">Last Waxed: {{ bike.miles }}</p>
+          <p class="card-text">Current: {{ bike.miles }}</p>
+          <p class="card-text">Total: {{ bike.miles }}</p>
+          <a href="{{ url_for('bike', bike_id=bike.id) }}" class="btn btn-primary">View</a>
+        </div>
       </div>
-    </div>
-    {% endfor %}
-    
+      {% endfor %}
+
+    <a href="#" data-bs-toggle="modal" data-bs-target="#addPartModal">Add a Bike</a>
+
     <p><a href="{{ url_for('add_bike') }}">Add a bike!</a></p>
     {% endif %}
   <!-- <h2>Bikes</h2>

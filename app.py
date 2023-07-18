@@ -82,8 +82,27 @@ def bikes():
 def add_bike():
     athlete = client.get_athlete()
     bikes = athlete.bikes
-    print(bikes)
-    return redirect(url_for('userhome', username=current_user.username))
+
+    form = BikeForm()
+    form.bikes.choices = [(bike.id, bike.name) for bike in bikes]
+
+    if form.validate_on_submit():
+        selected_bike_ids = form.bikes.data
+        owner_id = current_user.id
+        
+        selected_bikes = [bike for bike in bikes if bike.id in selected_bike_ids]
+
+        for bike in selected_bikes:
+            bike = Bike(id = bike.id,
+                        name = bike.name,
+                        owner_id = owner_id,
+                        miles = bike.distance)
+            db.session.add(bike)
+            db.session.commit()
+        return redirect(url_for('userhome', username=current_user.username))
+
+    return render_template('add_bike.html', form=form)
+
 
 @app.route('/stravacallback')
 @login_required

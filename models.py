@@ -6,7 +6,7 @@ from flask_login import UserMixin
 from datetime import datetime, timedelta
 
 class Owner(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(32), primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
@@ -34,9 +34,9 @@ class Owner(UserMixin, db.Model):
 
 
 class Bike(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(32), primary_key=True)
     name = db.Column(db.String(64), index=True)
-    owner_id = db.Column(db.Integer, db.ForeignKey('owner.id'))
+    owner_id = db.Column(db.String(32), db.ForeignKey('owner.id'))
     parts = db.relationship('Part', backref='bike', lazy='dynamic')
     miles = db.Column(db.Float)
 
@@ -45,10 +45,10 @@ class Bike(db.Model):
 
 
 class Part(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(32), primary_key=True)
     name = db.Column(db.String(64), unique=True)
     part_type = db.Column(Enum('Chain', 'Tire', name='part_type_enum'))
-    bike_id = db.Column(db.Integer, db.ForeignKey('bike.id'))
+    bike_id = db.Column(db.String(32), db.ForeignKey('bike.id'))
     miles_current = db.Column(db.Float)
     miles_starting = db.Column(db.Float)
     miles_limit = db.Column(db.Float)
