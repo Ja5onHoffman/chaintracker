@@ -28,14 +28,14 @@ login_manager.login_view = 'login'
 
 @login_manager.user_loader
 def load_user(user_id):
-    return Owner.query.get(int(user_id))
+    return Owner.query.get(user_id)
 
 # Initialize the database with the app
 db.init_app(app)
 
 @app.route('/')
 def index():
-    # logout_user()
+    logout_user()
     return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -147,20 +147,20 @@ def userhome(username):
     bikes = user.bikes.all()
     return render_template('userhome.html', user=user, bikes=bikes, authorize_url=url)
 
-@app.route('/bike/<int:bike_id>')
+@app.route('/bike/<string:bike_id>')
 @login_required
 def bike(bike_id):
     form = PartForm()
     bike = Bike.query.get(bike_id)
     return render_template('bike.html', bike=bike, bike_id=bike_id, form=form)
 
-@app.route('/part/<int:part_id>')
+@app.route('/part/<string:part_id>')
 @login_required
 def part(part_id):
     part = Part.query.get(part_id)
     return render_template('part.html', part=part)
 
-@app.route('/add_part/<int:bike_id>', methods=['GET', 'POST'])
+@app.route('/add_part/<bike_id>', methods=['GET', 'POST'])
 @login_required
 def add_part(bike_id):
     bike = Bike.query.get(bike_id)
