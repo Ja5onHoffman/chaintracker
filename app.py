@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify 
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import Owner, Bike, Part
@@ -9,12 +9,15 @@ from forms import LoginForm, RegistrationForm, PartForm, BikeForm
 from flask_migrate import Migrate
 from stravalib.client import Client 
 from datetime import datetime
+from flask_debugtoolbar import DebugToolbarExtension
 
 load_dotenv()
 
 app = Flask(__name__)
+
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+
 
 migrate = Migrate(app, db)
 
@@ -33,19 +36,24 @@ def load_user(user_id):
 # Initialize the database with the app
 db.init_app(app)
 
+toolbar = DebugToolbarExtension(app)
+
+
 @app.route('/')
 def index():
-    logout_user()
+    # logout_user()
     return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    print(current_user.is_authenticated)
     if current_user.is_authenticated:
         # logout_user() # logout for now to test login
+        print(client.access_token)
         user = Owner.query.filter_by(username=current_user.username).first()
-        if user.strava_authenticated:
-            client.access_token = user.access_token
-
+        client.access_token = user.access_token
+        print(client.access_token)
+        if user.strava_authenticated:            
             if user.refresh_token_expiration > datetime.now():
                 refresh_response = client.refresh_access_token(client_id=os.getenv('CLIENT_ID'), 
                                                                 client_secret=os.getenv('CLIENT_SECRET'), 
@@ -70,21 +78,22 @@ def login():
             flash('Invalid username or password')
     return render_template('login.html', title='Sign In', form=form)
 
-@app.route('/bikes')
+@app.route('/get_bikes')
 @login_required
-def bikes():
-    bikes = client.get_gear()
-    print(bikes)
-    return redirect(url_for('userhome', username=current_user.username))
-
-@app.route('/add_bike', methods=['GET', 'POST'])
-@login_required
-def add_bike():
+def get_bikes():
+    print("get bikes")
     athlete = client.get_athlete()
     bikes = athlete.bikes
+    print(bikes)
+    bike_data = [{'id': bike.id, 'name': bike.name, 'miles': bike.distance.num } for bike in bikes]
 
+    return jsonify({'bikes': bike_data})
+
+@app.route('/add_bike', methods=['POST'])
+@login_required
+def add_bike():
+   
     form = BikeForm()
-    form.bikes.choices = [(bike.id, bike.name) for bike in bikes]
 
     if form.validate_on_submit():
         selected_bike_ids = form.bikes.data
@@ -101,7 +110,7 @@ def add_bike():
             db.session.commit()
         return redirect(url_for('userhome', username=current_user.username))
 
-    return render_template('add_bike.html', form=form)
+    return render_template('userhome', username=current_user.username)
 
 
 @app.route('/stravacallback')
@@ -182,6 +191,8 @@ def add_part(bike_id):
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
+        client.access_token = user.access_token
+
         return redirect(url_for('userhome', username=current_user.username))
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -201,17 +212,6 @@ def read():
         print("email:", owner.email)
         print("id:", owner.id)
     return "Read successful"
-
-
-
-# ## Strava stuff
-# @app.route('/strava')
-# @login_required
-# def strava_auth(user):
-#     username = current_user.username
-#     url = client.authorization_url(client_id=os.getenv('CLIENT_ID'), 
-#                                redirect_uri=f'http://127.0.0.1:5000/user/{username}', 
-#                                approval_prompt='auto')
     
 
 
