@@ -1,19 +1,22 @@
-<!-- Modal -->
-<div class="modal fade" id="bikeModal" tabindex="-1" aria-labelledby="bikeModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="bikeModalLabel">Select Bikes</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="{{ url_for('add_bike') }}" method="POST" id="bikeForm">
-                    <!-- Form elements will be populated dynamically by listener.js -->
-                    <button type="submit" class="btn btn-primary">Add Bikes</button>
-                </form>
-            </div>
-        </div>
-    </div>
+{% extends "base.html" %}
+
+{% block title %}Add Bike{% endblock %}
+
+{% block content %}
+
+<div class="container d-flex justify-content-center">
+  <div class="col-lg-6">
+    <form action="{{ url_for('add_bike') }}" method="POST">
+    {{ form.hidden_tag() }}
+      <div class="mb-3">
+        {{ form.bikes.label(class_="form-label") }}
+        {{ form.bikes(class_="form-select") }}
+      </div>
+      <div class="mb-3">
+        {{ form.submit(class_="btn btn-primary") }}
+      </div>
+    </form>
+  </div>
 </div>
 
-  
+{% endblock %}

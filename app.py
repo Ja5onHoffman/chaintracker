@@ -10,6 +10,7 @@ from flask_migrate import Migrate
 from stravalib.client import Client 
 from datetime import datetime
 from flask_debugtoolbar import DebugToolbarExtension
+from pint import UnitRegistry
 
 load_dotenv()
 
@@ -18,6 +19,8 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 
+# For distance conversions
+ureg = UnitRegistry()
 
 migrate = Migrate(app, db)
 
@@ -89,28 +92,40 @@ def get_bikes():
 
     return jsonify({'bikes': bike_data})
 
-@app.route('/add_bike', methods=['POST'])
+@app.route('/add_bike', methods=['GET', 'POST'])
 @login_required
 def add_bike():
-   
     form = BikeForm()
 
+    athlete = client.get_athlete()
+    bikes = athlete.bikes
+    bike_data = [{'id': bike.id, 'name': bike.name, 'miles': float(bike.distance)} for bike in bikes]
+
+    # Set choices for the form bikes field
+    form.bikes.choices = [(bike['id'], bike['name']) for bike in bike_data]
+
+    # Handling form submission
     if form.validate_on_submit():
         selected_bike_ids = form.bikes.data
         owner_id = current_user.id
-        
+
         selected_bikes = [bike for bike in bikes if bike.id in selected_bike_ids]
 
         for bike in selected_bikes:
-            bike = Bike(id = bike.id,
-                        name = bike.name,
-                        owner_id = owner_id,
-                        miles = bike.distance)
+            bike = Bike(
+                id=bike.id,
+                name=bike.name,
+                owner_id=owner_id,
+                miles=float(bike.distance)
+            )
             db.session.add(bike)
             db.session.commit()
         return redirect(url_for('userhome', username=current_user.username))
+    print(form.errors)
+    # Render the template with the bikes data and the form
+    return render_template('add_bike.html', username=current_user.username, bikes=bike_data, form=form)
 
-    return render_template('userhome', username=current_user.username)
+
 
 
 @app.route('/stravacallback')

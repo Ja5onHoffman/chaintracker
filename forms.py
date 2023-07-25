@@ -37,8 +37,9 @@ class PartForm(FlaskForm):
     submit = SubmitField('Add Part')
         
 class BikeForm(FlaskForm):
-    bikes = SelectMultipleField('Select Bikes', validators=[DataRequired()], coerce=int)
-    submit = SubmitField('Add Bikes')
+    bikes = SelectField('Select a Bike', validators=[DataRequired()], coerce=str)
+    submit = SubmitField('Add Bike')
+
 
 
 # class BikeFromStrava(FlaskForm):

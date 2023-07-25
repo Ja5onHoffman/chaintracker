@@ -19,10 +19,7 @@
       </div>
       {% endfor %}
 
-    <a href="#" data-bs-toggle="modal" data-bs-target="#bikeModal">Add a Bike</a>
-
-    {% include "add_bike.html" %}
-    <!-- <p><a href="{{ url_for('add_bike') }}">Add a bike!</a></p> -->
+    <p><a href="{{ url_for('add_bike') }}">Add a bike!</a></p>
     {% endif %}
   <!-- <h2>Bikes</h2>
   <ul>
