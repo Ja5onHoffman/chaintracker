@@ -112,11 +112,12 @@ def add_bike():
         selected_bikes = [bike for bike in bikes if bike.id in selected_bike_ids]
 
         for bike in selected_bikes:
+            bike_miles = round(bike.distance.to(ureg.mile).magnitude, 1)
             bike = Bike(
                 id=bike.id,
                 name=bike.name,
                 owner_id=owner_id,
-                miles=float(bike.distance)
+                miles=bike_miles
             )
             db.session.add(bike)
             db.session.commit()
