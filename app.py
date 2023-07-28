@@ -11,6 +11,7 @@ from stravalib.client import Client
 from datetime import datetime
 from flask_debugtoolbar import DebugToolbarExtension
 from pint import UnitRegistry
+from functions import update_token
 
 load_dotenv()
 
@@ -49,23 +50,14 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    print(current_user.is_authenticated)
     if current_user.is_authenticated:
-        # logout_user() # logout for now to test login
-        print(client.access_token)
+        # logout_user() # logout for now to test login            
         user = Owner.query.filter_by(username=current_user.username).first()
         client.access_token = user.access_token
         print(client.access_token)
-        if user.strava_authenticated:            
-            if user.refresh_token_expiration > datetime.now():
-                refresh_response = client.refresh_access_token(client_id=os.getenv('CLIENT_ID'), 
-                                                                client_secret=os.getenv('CLIENT_SECRET'), 
-                                                                refresh_token=user.refresh_token)
-                user.access_token = refresh_response['access_token']
-                user.refresh_token = refresh_response['refresh_token']
-                user.refresh_token_expiration = datetime.fromtimestamp(refresh_response['expires_at'])
-                db.session.commit()
-
+        if user.strava_authenticated:
+            update_token(user, client)         
+ 
         return redirect(url_for('userhome', username=current_user.username))
     
     form = LoginForm()
@@ -74,6 +66,7 @@ def login():
         if user and user.check_password(form.password.data):
             login_user(user)
             session['strava_authenticated'] = user.strava_authenticated
+            update_token(user, client)
             if not user.strava_authenticated:
                 session['auth_complete'] = False
             return redirect(url_for('userhome', username=user.username))
