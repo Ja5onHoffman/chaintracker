@@ -80,8 +80,7 @@ def get_bikes():
     print("get bikes")
     athlete = client.get_athlete()
     bikes = athlete.bikes
-    print(bikes)
-    bike_data = [{'id': bike.id, 'name': bike.name, 'miles': bike.distance.num } for bike in bikes]
+    bike_data = [{'id': bike.id, 'name': bike.name, 'miles_starting': bike.distance.num } for bike in bikes]
 
     return jsonify({'bikes': bike_data})
 
@@ -92,7 +91,7 @@ def add_bike():
 
     athlete = client.get_athlete()
     bikes = athlete.bikes
-    bike_data = [{'id': bike.id, 'name': bike.name, 'miles': float(bike.distance)} for bike in bikes]
+    bike_data = [{'id': bike.id, 'name': bike.name, 'miles_starting': float(bike.distance)} for bike in bikes]
 
     # Set choices for the form bikes field
     form.bikes.choices = [(bike['id'], bike['name']) for bike in bike_data]
@@ -110,7 +109,9 @@ def add_bike():
                 id=bike.id,
                 name=bike.name,
                 owner_id=owner_id,
-                miles=bike_miles
+                miles_starting=bike_miles,
+                miles_current=bike_miles,
+                miles_limit = 300
             )
             db.session.add(bike)
             db.session.commit()
@@ -120,6 +121,13 @@ def add_bike():
     return render_template('add_bike.html', username=current_user.username, bikes=bike_data, form=form)
 
 
+@app.route('/set_limit/<bike_id>', methods=['POST'])
+@login_required
+def set_limit(bike_id):
+    bike = Bike.query.get(bike_id)
+    bike.miles_limit = request.form.get('miles_limit')
+    db.session.commit()
+    return redirect(url_for('userhome', username=current_user.username))
 
 
 @app.route('/stravacallback')

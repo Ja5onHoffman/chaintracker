@@ -34,9 +34,9 @@ class Owner(UserMixin, db.Model):
 
 
 class Bike(db.Model):
-    id = db.Column(db.String(32), primary_key=True)
+    id = db.Column(db.String(64), primary_key=True)
     name = db.Column(db.String(64), index=True)
-    owner_id = db.Column(db.String(32), db.ForeignKey('owner.id'))
+    owner_id = db.Column(db.String(64), db.ForeignKey('owner.id'))
     parts = db.relationship('Part', backref='bike', lazy='dynamic')
     miles_current = db.Column(db.Float)
     miles_starting = db.Column(db.Float)
