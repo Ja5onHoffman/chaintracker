@@ -6,7 +6,7 @@ from flask_login import UserMixin
 from datetime import datetime, timedelta
 
 class Owner(UserMixin, db.Model):
-    id = db.Column(db.String(32), primary_key=True)
+    id = db.Column(db.String(64), primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
@@ -38,12 +38,15 @@ class Bike(db.Model):
     name = db.Column(db.String(64), index=True)
     owner_id = db.Column(db.String(32), db.ForeignKey('owner.id'))
     parts = db.relationship('Part', backref='bike', lazy='dynamic')
-    miles = db.Column(db.Float)
+    miles_current = db.Column(db.Float)
+    miles_starting = db.Column(db.Float)
+    miles_limit = db.Column(db.Float)
 
     def __repr__(self):
         return '<Bike {}>'.format(self.name)
 
 
+# Not used yet
 class Part(db.Model):
     id = db.Column(db.String(32), primary_key=True)
     name = db.Column(db.String(64), unique=True)

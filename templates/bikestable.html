@@ -1,0 +1,32 @@
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Bike</th>
+        <th scope="col">Last Waxed</th>
+        <th scope="col">Current Miles</th>
+        <th scope="col">Remaining</th>
+        <th scope="col">Miles Limit</th>
+        <th scope="col">Edit Limit</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% if user.bikes %}
+            {% for bike in user.bikes %}
+                <tr>
+                    <td>{{ bike.name }}</td>
+                    <td>{{ bike.miles_starting }}</td>
+                    <td>{{ bike.miles_current }}</td>
+                    <td>{{ bike.miles_current - bike.miles_starting }}</td>
+                    <form method="POST" action="{{ url_for('set_limit', bike_id=bike.id) }}">
+                        <td>
+                            <input type="number" name="miles_limit" value="{{ bike.miles_limit }}">
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-primary">Edit Limit</button>
+                        </td>
+                    </form>
+                </tr>
+            {% endfor %}
+        {% endif %}
+    </tbody>
+</table>
