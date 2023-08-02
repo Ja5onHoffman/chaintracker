@@ -29,6 +29,12 @@
                             <button type="submit" class="btn btn-primary">Wax!</button> <!-- bubble explanation here -->
                         </form>
                     </td>
+                    <td>
+                        <form action="{{ url_for('delete', bike_id=bike.id) }}" method="POST">
+                            <input type="hidden" name="bike_id" value="{{ bike.id }}">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
                 </tr>
             {% endfor %}
         {% endif %}

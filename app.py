@@ -137,6 +137,14 @@ def wax(bike_id):
     db.session.commit()
     return redirect(url_for('userhome', username=current_user.username))
 
+@app.route('/delete/<bike_id>', methods=['POST'])
+@login_required
+def delete(bike_id):
+    bike = Bike.query.get(bike_id)
+    db.session.delete(bike)
+    db.session.commit()
+    return redirect(url_for('userhome', username=current_user.username))
+
 @app.route('/stravacallback')
 @login_required
 def strava_callback():
