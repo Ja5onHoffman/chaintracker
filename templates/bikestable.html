@@ -10,7 +10,7 @@
     <tbody>
         {% if user.bikes %}
             {% for bike in user.bikes %}
-                {% set remaining = bike.miles_current - bike.miles_starting %}
+                {% set remaining = bike.miles_current - bike.miles_starting | round(1) %}
                 <tr class="{{ 'table-danger' if remaining > bike.miles_limit }}">
                     <td>{{ bike.name }}</td>
                     <td>{{ bike.miles_starting }}</td>
@@ -21,6 +21,12 @@
                             <input type="hidden" name="bike_id" value="{{ bike.id }}">
                             <input type="number" name="miles_limit" value="{{ bike.miles_limit }}">
                             <button type="submit" class="btn btn-primary">Edit Limit</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="{{ url_for('wax', bike_id=bike.id) }}" method="POST">
+                            <input type="hidden" name="bike_id" value="{{ bike.id }}">
+                            <button type="submit" class="btn btn-primary">Wax!</button> <!-- bubble explanation here -->
                         </form>
                     </td>
                 </tr>

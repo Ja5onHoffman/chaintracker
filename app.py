@@ -129,6 +129,13 @@ def set_limit(bike_id):
     db.session.commit()
     return redirect(url_for('userhome', username=current_user.username))
 
+@app.route('/wax/<bike_id>', methods=['POST'])
+@login_required
+def wax(bike_id):
+    bike = Bike.query.get(bike_id)
+    bike.miles_starting = bike.miles_current
+    db.session.commit()
+    return redirect(url_for('userhome', username=current_user.username))
 
 @app.route('/stravacallback')
 @login_required
