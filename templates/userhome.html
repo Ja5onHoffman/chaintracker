@@ -5,32 +5,10 @@
 
   {% if user.strava_authenticated %}
 
-    {% if user.bikes %}
-    <h2>Bikes</h2>
-      {% for bike in user.bikes %}
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">{{ bike.name }}</h5>
-          <p class="card-text">Last Waxed: {{ bike.miles }}</p>
-          <p class="card-text">Current: {{ bike.miles }}</p>
-          <p class="card-text">Total: {{ bike.miles }}</p>
-          <a href="{{ url_for('bike', bike_id=bike.id) }}" class="btn btn-primary">View</a>
-        </div>
-      </div>
-      {% endfor %}
+  {% include 'bikestable.html' %}
 
     <p><a href="{{ url_for('add_bike') }}">Add a bike!</a></p>
-    {% endif %}
-  <!-- <h2>Bikes</h2>
-  <ul>
-    {% if user.bikes %}
-      {% for bike in user.bikes %}
-        <li><a href="{{ url_for('bike', bike_id=bike.id) }}">{{ bike.name }}</a></li>
-      {% endfor %}
-    {% else %}
-    <p><a href="">Add a bike!</a></p>
-    {% endif %}
-  </ul> -->
+
   {% else %}
 
   <div class="jumbotron">

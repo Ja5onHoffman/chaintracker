@@ -5,28 +5,26 @@
         <th scope="col">Last Waxed</th>
         <th scope="col">Current Miles</th>
         <th scope="col">Remaining</th>
-        <th scope="col">Miles Limit</th>
-        <th scope="col">Edit Limit</th>
       </tr>
     </thead>
     <tbody>
         {% if user.bikes %}
             {% for bike in user.bikes %}
-                <tr>
+                {% set remaining = bike.miles_current - bike.miles_starting %}
+                <tr class="{{ 'table-danger' if remaining > bike.miles_limit }}">
                     <td>{{ bike.name }}</td>
                     <td>{{ bike.miles_starting }}</td>
                     <td>{{ bike.miles_current }}</td>
-                    <td>{{ bike.miles_current - bike.miles_starting }}</td>
-                    <form method="POST" action="{{ url_for('set_limit', bike_id=bike.id) }}">
-                        <td>
+                    <td>{{ remaining }}</td>
+                    <td>
+                        <form action="{{ url_for('set_limit', bike_id=bike.id) }}" method="POST">
+                            <input type="hidden" name="bike_id" value="{{ bike.id }}">
                             <input type="number" name="miles_limit" value="{{ bike.miles_limit }}">
-                        </td>
-                        <td>
                             <button type="submit" class="btn btn-primary">Edit Limit</button>
-                        </td>
-                    </form>
+                        </form>
+                    </td>
                 </tr>
             {% endfor %}
         {% endif %}
     </tbody>
-</table>
+  </table>
