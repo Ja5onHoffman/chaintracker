@@ -11,7 +11,7 @@ from stravalib.client import Client
 from datetime import datetime
 from flask_debugtoolbar import DebugToolbarExtension
 from pint import UnitRegistry
-from functions import update_token
+from functions import update_token, update_miles
 
 load_dotenv()
 
@@ -54,10 +54,8 @@ def login():
         # logout_user() # logout for now to test login            
         user = Owner.query.filter_by(username=current_user.username).first()
         client.access_token = user.access_token
-        print(client.access_token)
         if user.strava_authenticated:
             update_token(user, client)         
- 
         return redirect(url_for('userhome', username=current_user.username))
     
     form = LoginForm()
@@ -186,6 +184,7 @@ def userhome(username):
         print(url)
     user = Owner.query.filter_by(username=username).first_or_404()
     bikes = user.bikes.all()
+    update_miles(user, client)
     return render_template('userhome.html', user=user, bikes=bikes, authorize_url=url)
 
 @app.route('/bike/<string:bike_id>')

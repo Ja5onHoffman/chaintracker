@@ -1,6 +1,9 @@
 import os
 from database import db
 from datetime import datetime
+from pint import UnitRegistry
+
+ureg = UnitRegistry()
 
 # Update expired refresh token
 def update_token(user, client):
@@ -14,3 +17,11 @@ def update_token(user, client):
             user.refresh_token_expiration = datetime.fromtimestamp(refresh_response['expires_at'])
             client.access_token = refresh_response['access_token']
             db.session.commit()
+
+def update_miles(user, client):
+    bikes = user.bikes
+    for bike in bikes:
+        strava_bike = client.get_gear(bike.id)
+        bike.miles_current = round(strava_bike.distance.to(ureg.mile).magnitude, 1)
+        print('miles updated')
+        db.session.commit()
