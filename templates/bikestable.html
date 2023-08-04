@@ -15,7 +15,33 @@
                     <td>{{ bike.name }}</td>
                     <td>{{ bike.miles_starting }}</td>
                     <td>{{ bike.miles_current }}</td>
-                    <td>{{ remaining }}</td>
+                    <td>
+                        {% if remaining < 0 %}
+                            {{ abs(remaining) }} over
+                        {% else %}
+                            {{ remaining }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button
+                          class="editButton btn btn-primary"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#editCollapse{{ loop.index }}"
+                          aria-expanded="false"
+                          aria-controls="editCollapse{{ loop.index }}"
+                        >
+                        <i class="bi bi-chevron-right" id="icon1"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr class="collapse" id="editCollapse{{ loop.index }}">
+                        <td>
+                          <input
+                            type="number"
+                            name="miles_limit"
+                            value="{{ bike.miles_limit }}"
+                          />
                     <td>
                         <form action="{{ url_for('set_limit', bike_id=bike.id) }}" method="POST">
                             <input type="hidden" name="bike_id" value="{{ bike.id }}">

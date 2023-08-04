@@ -183,8 +183,8 @@ def userhome(username):
         url = new_url
         print(url)
     user = Owner.query.filter_by(username=username).first_or_404()
-    bikes = user.bikes.all()
     update_miles(user, client)
+    bikes = user.bikes.all()
     return render_template('userhome.html', user=user, bikes=bikes, authorize_url=url)
 
 @app.route('/bike/<string:bike_id>')
