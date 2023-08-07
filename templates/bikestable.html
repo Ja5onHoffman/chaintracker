@@ -10,7 +10,7 @@
     <tbody>
         {% if user.bikes %}
             {% for bike in user.bikes %}
-                {% set remaining = (bike.miles_current - bike.miles_starting) | round(1) %}
+                {% set remaining = (bike.miles_limit - (bike.miles_current - bike.miles_starting)) | round(1) %}
                 <tr class="{{ 'table-danger' if remaining > bike.miles_limit }}">
                     <td>{{ bike.name }}</td>
                     <td>{{ bike.miles_starting }}</td>
