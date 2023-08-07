@@ -1,14 +1,25 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Hi {{ user.username }}</h1>
+<div class="container">
+  <div class="row">
+    <div class="col-md-2">
+    <h1>Hi {{ user.username }}</h1>
+    </div>
+  </div>
 
   {% if user.strava_authenticated %}
 
-  {% include 'bikestable.html' %}
+  <div class="row">
+    <div class="col-md-12">
+      {% include 'bikestable.html' %}
+    </div>
+  </div>
+  
 
-    <p><a href="{{ url_for('add_bike') }}">Add a bike!</a></p>
 
+  <a href="{{ url_for('add_bike') }}" class="btn btn-primary">Add a bike!</a>
+</div>
   {% else %}
 
   <div class="jumbotron">
