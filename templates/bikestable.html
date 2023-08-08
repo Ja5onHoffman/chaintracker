@@ -1,16 +1,17 @@
 <table class="table">
-    <thead>
+    <thead class="table-dark">
       <tr>
         <th scope="col">Bike</th>
         <th scope="col">Last Waxed</th>
         <th scope="col">Current Miles</th>
         <th scope="col">Remaining</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
         {% if user.bikes %}
             {% for bike in user.bikes %}
-                {% set remaining = bike.miles_current - bike.miles_starting | round(1) %}
+                {% set remaining = (bike.miles_limit - (bike.miles_current - bike.miles_starting)) | round(1) %}
                 <tr class="{{ 'table-danger' if remaining > bike.miles_limit }}">
                     <td>{{ bike.name }}</td>
                     <td>{{ bike.miles_starting }}</td>
