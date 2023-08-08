@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from models import Owner, Bike, Part
 from database import db
 import os
+import uuid
 from dotenv import load_dotenv
 from forms import LoginForm, RegistrationForm, PartForm, BikeForm
 from flask_migrate import Migrate
@@ -227,7 +228,7 @@ def register():
         return redirect(url_for('userhome', username=current_user.username))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = Owner(username=form.username.data, email=form.email.data)
+        user = Owner(id=str(uuid.uuid4()), username=form.username.data, email=form.email.data, bikes=[])
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
