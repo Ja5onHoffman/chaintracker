@@ -1,12 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+{% include 'navbar.html' %}
+
 <div class="container">
-  <div class="row">
-    <div class="col-md-2">
-    <h1>Hi {{ user.username }}</h1>
-    </div>
-  </div>
 
   {% if user.strava_authenticated %}
 
@@ -15,8 +13,6 @@
       {% include 'bikestable.html' %}
     </div>
   </div>
-  
-
 
   <a href="{{ url_for('add_bike') }}" class="btn btn-primary">Add a bike!</a>
 </div>

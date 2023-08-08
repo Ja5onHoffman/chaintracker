@@ -1,0 +1,27 @@
+<nav class="navbar navbar-expand-md bg-body py-3">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon">
+                <!-- Image icon replacement -->
+                <img src="icons/square.png" alt="Square Icon" width="24" height="24">
+            </span>
+            <span>Hi {{ user.username }}</span>
+        </a>
+        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navcol-2">
+            <span class="visually-hidden">Toggle navigation</span>
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="navcol-2" class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                    <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">Dropdown </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">First Item</a>
+                        <a class="dropdown-item" href="#">Second Item</a>
+                        <a class="dropdown-item" href="#">Third Item</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
