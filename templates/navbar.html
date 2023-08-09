@@ -25,14 +25,15 @@
         <div id="navcol-2" class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item dropdown">
-                    <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">Dropdown </a>
+                    <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">Menu</a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Disconnect Strava</a>
-                        <a class="dropdown-item" href="#">Logout</a>
+                        <a class="dropdown-item" href="{{ url_for('deauthorize') }}">Disconnect Strava</a>
+                        <a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a>
                     </div>
                 </li>
             </ul>
         </div>
+
         {% endif %}
     </div>
 </nav>
