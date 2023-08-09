@@ -1,12 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+{% include 'navbar.html' %}
+
 <div class="container">
-  <div class="row">
-    <div class="col-md-2">
-    <h1>Hi {{ user.username }}</h1>
-    </div>
-  </div>
 
   {% if user.strava_authenticated %}
 
@@ -15,21 +13,24 @@
       {% include 'bikestable.html' %}
     </div>
   </div>
-  
-
 
   <a href="{{ url_for('add_bike') }}" class="btn btn-primary">Add a bike!</a>
 </div>
   {% else %}
 
-  <div class="jumbotron">
-    <h1>Connect your Strava account to use the app.</h1>
-    <p class="lead">
-    	Authenticate using your Strava account.
-	</p>
-	<p><a class="btn btn-lg" href="{{ authorize_url }}" role="button"><img src="/static/ConnectWithStrava.png" border="0" width="262" height="43" /></a></p>
+  <section class="py-4 py-xl-5">
+    <div class="container">
+        <div class="text-white border rounded border-0 border-primary d-flex flex-column justify-content-center align-items-center p-4 p-md-5" style="background: rgba(252, 76, 2, 0.5);">
+            <div class="pb-2 pb-lg-1 text-center">
+                <h2 class="fw-bold mb-2">Connect your Strava account to use the app.&nbsp;</h2>
+            </div>
+            <div class="my-2" style="text-align: center;">
+              <a class="btn btn-lg" href="{{ authorize_url }}" role="button"><img src="/static/ConnectWithStrava.png" border="0" width="262" height="43" /></a>
+            </div>
+        </div>
+    </div>
+</section>
 
-  </div>
 
   {% endif %}
 

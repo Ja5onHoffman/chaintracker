@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, IntegerField, SelectMultipleField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, IntegerField, SelectMultipleField, validators
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from models import Owner, Bike, Part
 from flask_login import current_user
@@ -13,7 +13,7 @@ class LoginForm(FlaskForm):
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()]) 
     email = StringField('Email', validators=[DataRequired(), Email()]) 
-    password = PasswordField('Password', validators=[DataRequired()]) 
+    password = PasswordField('Password', validators=[DataRequired(), EqualTo('password2', message='Passwords must match')]) 
     password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Register')
 
