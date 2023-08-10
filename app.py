@@ -236,6 +236,19 @@ def register():
         return redirect(url_for('userhome', username=user.username))
     return render_template('register.html', title='Register', form=form)
 
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+@app.route('/deauthorize', methods=['POST'])
+def deauthorize():
+    user = Owner.query.filter_by(username=current_user.username).first()
+    client.deauthorize()
+    user.strava_authenticated = False
+    db.session.commit()
+    return redirect(url_for('userhome', username=current_user.username))
+
 @app.route('/read')
 def read():
     owners = Owner.query.all()
@@ -244,6 +257,53 @@ def read():
         print("email:", owner.email)
         print("id:", owner.id)
     return "Read successful"
+
+
+
+
+## Webhook stuff
+
+@app.route('/webhooksub', methods=['POST'])
+def webhooksub():
+    try:
+        client.create_subscription(
+            client_id=os.getenv('CLIENT_ID'), 
+            client_secret=os.getenv('CLIENT_SECRET'), 
+            callback_url='#ngrok url',
+            verify_token='STRAVA')
+        return "Subscription created", 200
+    except StravaError as e:
+        return f"Error: {str(e)}", 500
+
+
+@app.route('/webhook', methods=['GET' 'POST'])
+def webhook():
+    if request.method == 'GET':
+        challenge = request.args.get('hub.challenge')
+        return challenge
+    elif request.method == 'POST':
+        data = request.json
+        gear_id = data.get('gear_id')
+
+        bike = Bike.query.filter_by(id=gear_id).first()
+        
+        if bike:
+            user = Owner.query.filter_by(id=bike.owner_id).first()
+
+            if user:
+                client.access_token = user.access_token
+                update_token(user, client)
+
+                bike = client.get_gear(gear_id)
+                bike.miles_current = round(bike.distance.to(ureg.mile).magnitude, 1)
+                db.session.commit()
+                db.session.refresh(bike)
+
+                return jsonify({"status": "success", "message": "Bike miles updated."}), 200
+        else:
+            return jsonify({"status": "error", "message": "User not found."}), 404
+    else:
+        return jsonify({"status": "error", "message": "Bike not found."}), 404
     
 
 
