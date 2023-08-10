@@ -24,10 +24,12 @@
 
         <div id="navcol-2" class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item dropdown">
-                    <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">Menu</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="{{ url_for('deauthorize') }}">Disconnect Strava</a>
+                <li class="nav-item dropdown me-5">
+                    <a class="dropdown-toggle nav-link me-3" aria-expanded="false" data-bs-toggle="dropdown" href="#">Menu</a>
+                    <div class="dropdown-menu"> <!-- Form because requires POST -->
+                        <form action="{{ url_for('deauthorize') }}" method="post" class="d-inline-block my-0">
+                            <button type="submit" class="btn btn-link dropdown-item">Disconnect Strava</button>
+                        </form>
                         <a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a>
                     </div>
                 </li>
