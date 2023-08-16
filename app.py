@@ -136,6 +136,15 @@ def wax(bike_id):
     db.session.commit()
     return redirect(url_for('userhome', username=current_user.username))
 
+@app.route('/edit_starting/<bike_id>', methods=['POST'])
+@login_required
+def edit_starting(bike_id):
+    bike = Bike.query.get(bike_id)
+    bike.miles_starting = request.form.get('miles_starting')
+    db.session.commit()
+    db.session.refresh(bike)
+    return redirect(url_for('userhome', username=current_user.username))
+
 @app.route('/delete/<bike_id>', methods=['POST'])
 @login_required
 def delete(bike_id):
