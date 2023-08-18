@@ -29,53 +29,49 @@
                           type="button"
                           data-bs-toggle="collapse"
                           data-bs-target="#editCollapse{{ loop.index }}"
-                          aria-expanded="false"
-                          aria-controls="editCollapse{{ loop.index }}"
                         >
-                        <i class="bi bi-chevron-right" id="icon1"></i>
+                        Edit
                         </button>
-                      </td>
-                    </tr>
-                    <tr class="collapse" id="editCollapse{{ loop.index }}">
-                    <td>
-
                     </td>
-                    <td>
-                        <form action="{{ url_for('edit_starting', bike_id=bike.id) }}" method="POST">
-                        
-                            <div class="input-group mb-3">
-                                <input type="hidden" name="bike_id" value="{{ bike.id }}">
-                                <input type="number" step="any" name="miles_starting" class="form-control" placeholder="Starting miles" value="{{ bike.miles_starting }}" aria-label="Starting miles" aria-describedby="button-addon2">
-                                <button class="btn btn-outline-primary" type="submit" id="button-addon2">Edit Starting</button>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <div class="row collapse" id="editCollapse{{ loop.index }}">
+                            <div class="col-3">
+                                <!-- Placeholder -->
                             </div>
-                        </form>
-                        
-                    </td>
-                    <td>
-                        <form action="{{ url_for('set_limit', bike_id=bike.id) }}" method="POST">
-                            <div class="input-group mb-3">
-                                <input type="hidden" name="bike_id" value="{{ bike.id }}">
-                                <input type="number" step="any" name="miles_limit" class="form-control" placeholder="Limit" value="{{ bike.miles_limit }}">
-                                <button type="submit" class="btn btn-outline-primary">Edit Limit</button>
+                            <div class="col-3">
+                                <form action="{{ url_for('edit_starting', bike_id=bike.id) }}" method="POST">
+                                    <div class="input-group mb-0">
+                                        <input type="hidden" name="bike_id" value="{{ bike.id }}">
+                                        <input type="number" step="any" name="miles_starting" class="form-control" placeholder="Starting miles" value="{{ bike.miles_starting }}" aria-label="Starting miles" aria-describedby="button-addon2">
+                                        <button class="btn btn-outline-primary" type="submit" id="button-addon2">Edit Starting</button>
+                                    </div>
+                                </form>
                             </div>
-                        </form>
-                    </td>
-                    <td>
-                        <div class="d-flex">
-                            <form action="{{ url_for('wax', bike_id=bike.id) }}" method="POST" class="me-2">
-                                <input type="hidden" name="bike_id" value="{{ bike.id }}">
-                                <button type="submit" class="btn btn-success">Wax!</button>
-                            </form>
-                    
-                            <form action="{{ url_for('delete', bike_id=bike.id) }}" method="POST">
-                                <input type="hidden" name="bike_id" value="{{ bike.id }}">
-                                <button type="submit" class="btn btn-danger">Delete Bike</button>
-                            </form>
+                            <div class="col-3">
+                                <form action="{{ url_for('set_limit', bike_id=bike.id) }}" method="POST">
+                                    <div class="input-group mb-0">
+                                        <input type="hidden" name="bike_id" value="{{ bike.id }}">
+                                        <input type="number" step="any" name="miles_limit" class="form-control" placeholder="Limit" value="{{ bike.miles_limit }}">
+                                        <button type="submit" class="btn btn-outline-primary">Edit Limit</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-3 d-flex">
+                                <form action="{{ url_for('wax', bike_id=bike.id) }}" method="POST" class="me-2">
+                                    <input type="hidden" name="bike_id" value="{{ bike.id }}">
+                                    <button type="submit" class="btn btn-success">Wax!</button>
+                                </form>
+                                <form action="{{ url_for('delete', bike_id=bike.id) }}" method="POST">
+                                    <input type="hidden" name="bike_id" value="{{ bike.id }}">
+                                    <button type="submit" class="btn btn-danger">Delete Bike</button>
+                                </form>
+                            </div>
                         </div>
                     </td>
-                    
                 </tr>
             {% endfor %}
         {% endif %}
     </tbody>
-  </table>
+</table>
