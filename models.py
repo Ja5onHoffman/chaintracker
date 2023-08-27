@@ -54,7 +54,6 @@ class Part(db.Model):
     bike_id = db.Column(db.String(32), db.ForeignKey('bike.id'))
     miles_current = db.Column(db.Float)
     miles_starting = db.Column(db.Float)
-    miles_limit = db.Column(db.Float)
 
     def __repr__(self):
         return '<Part {}>'.format(self.name)
