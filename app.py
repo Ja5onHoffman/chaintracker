@@ -19,8 +19,7 @@ load_dotenv()
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-DATABASE_URL = os.environ.get('DATABASE_URL').replace('postgres://', 'postgresql://')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace("postgres://", "postgresql://", 1)
 
 
 # For distance conversions
