@@ -21,11 +21,12 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace("postgres://", "postgresql://", 1)
 
+print(os.environ.get('SQLALCHEMY_DATABASE_URI'))
 
 # For distance conversions
 ureg = UnitRegistry()
 
-migrate = Migrate(app, db)
+# migrate = Migrate(app, db)
 
 # stravalib Client
 client = Client()
