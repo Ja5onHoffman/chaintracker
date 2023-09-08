@@ -180,7 +180,7 @@ def userhome(username):
     url = None
     if not strava_authenticated:
         url = client.authorization_url(client_id=os.getenv('CLIENT_ID'), 
-                                redirect_uri=f'http://127.0.0.1:5000/stravacallback',
+                                redirect_uri=f'https://waxtrackerapp.com/stravacallback',
                                 scope='read_all',
                                 approval_prompt='auto')
         # Add unsupported scopes
