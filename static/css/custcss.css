@@ -1,0 +1,38 @@
+/* 
+* {
+    border: 1px solid red;
+    box-sizing: border-box;
+} */
+
+/* For the button rotation effect */
+/* .editButton:not(.collapsed) .bi-chevron-right {
+    transform: rotate(90deg);
+}
+
+/* For smooth transitions on the icon */
+/* .editButton .bi-chevron-right {
+    transition: transform 0.3s ease-in-out;
+} */
+
+/* For the collapsible row animation */
+/* tr.collapse {
+    transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+} */
+
+.table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.collapse.show div {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* You might not need this if you don't use the .mb-3 class in your collapsible content */
+.mb-0 {
+    margin-bottom: 0 !important;
+}
